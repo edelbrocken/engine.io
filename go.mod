@@ -1,4 +1,4 @@
-module engine.io
+module github.com/edelbrocken/engine.io
 
 go 1.16
 
