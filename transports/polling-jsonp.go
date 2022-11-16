@@ -45,7 +45,7 @@ func (j *jsonp) New(ctx *types.HttpContext) *jsonp {
 // Due to a bug in \n handling by browsers, we expect a escaped string.
 func (j *jsonp) JSONPOnData(data types.BufferInterface) {
 	if data, err := url.ParseQuery(data.String()); err == nil {
-		if data.Has("d") {
+		if len(data.Get("d")) != 0 {
 			_data := rSlashes.ReplaceAllStringFunc(data.Get("d"), func(m string) string {
 				if parts := rSlashes.FindStringSubmatch(m); parts[1] != "" {
 					return parts[0]
