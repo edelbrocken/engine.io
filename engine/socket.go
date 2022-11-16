@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/zishang520/engine.io/events"
-	"github.com/zishang520/engine.io/log"
-	"github.com/zishang520/engine.io/packet"
-	"github.com/zishang520/engine.io/transports"
-	"github.com/zishang520/engine.io/types"
-	"github.com/zishang520/engine.io/utils"
+	"engine.io/events"
+	"engine.io/log"
+	"engine.io/packet"
+	"engine.io/transports"
+	"engine.io/types"
+	"engine.io/utils"
 )
 
 var socket_log = log.NewLog("engine:socket")

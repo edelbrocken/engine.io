@@ -3,10 +3,10 @@ package transports
 import (
 	"io"
 
+	"engine.io/log"
+	"engine.io/packet"
+	"engine.io/types"
 	ws "github.com/gorilla/websocket"
-	"github.com/zishang520/engine.io/log"
-	"github.com/zishang520/engine.io/packet"
-	"github.com/zishang520/engine.io/types"
 )
 
 var ws_log = log.NewLog("engine:ws")

@@ -1,13 +1,13 @@
 package transports
 
 import (
-	"github.com/zishang520/engine.io/types"
+	"engine.io/types"
 )
 
 type transports struct {
 	New             func(*types.HttpContext) Transport
 	HandlesUpgrades bool
-	UpgradesTo      *types.Set[string]
+	UpgradesTo      *types.Set
 }
 
 var _transports map[string]*transports = map[string]*transports{

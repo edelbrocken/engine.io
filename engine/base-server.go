@@ -5,11 +5,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/zishang520/engine.io/config"
-	"github.com/zishang520/engine.io/events"
-	"github.com/zishang520/engine.io/transports"
-	"github.com/zishang520/engine.io/types"
-	"github.com/zishang520/engine.io/utils"
+	"engine.io/config"
+	"engine.io/events"
+	"engine.io/transports"
+	"engine.io/types"
+	"engine.io/utils"
 )
 
 // Protocol errors mappings.
@@ -108,7 +108,7 @@ func (s *server) ClientsCount() uint64 {
 }
 
 // Returns a list of available transports for upgrade given a certain transport.
-func (s *server) Upgrades(transport string) *types.Set[string] {
+func (s *server) Upgrades(transport string) *types.Set {
 	if !s.opts.AllowUpgrades() {
 		return types.NewSet[string]()
 	}

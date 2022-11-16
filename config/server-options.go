@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/zishang520/engine.io/types"
+	"engine.io/types"
 )
 
 type AllowRequest func(*types.HttpContext) error
@@ -31,9 +31,9 @@ type ServerOptionsInterface interface {
 	GetRawAllowRequest() AllowRequest
 	AllowRequest() AllowRequest
 
-	SetTransports(*types.Set[string])
-	GetRawTransports() *types.Set[string]
-	Transports() *types.Set[string]
+	SetTransports(*types.Set)
+	GetRawTransports() *types.Set
+	Transports() *types.Set
 
 	SetAllowUpgrades(bool)
 	GetRawAllowUpgrades() *bool
@@ -84,7 +84,7 @@ type ServerOptions struct {
 	allowRequest AllowRequest
 
 	// the low-level transports that are enabled
-	transports *types.Set[string]
+	transports *types.Set
 
 	// whether to allow transport upgrades
 	allowUpgrades *bool
@@ -245,13 +245,13 @@ func (s *ServerOptions) AllowRequest() AllowRequest {
 
 // the low-level transports that are enabled
 // @default ["polling", "websocket"]
-func (s *ServerOptions) SetTransports(transports *types.Set[string]) {
+func (s *ServerOptions) SetTransports(transports *types.Set) {
 	s.transports = transports
 }
-func (s *ServerOptions) GetRawTransports() *types.Set[string] {
+func (s *ServerOptions) GetRawTransports() *types.Set {
 	return s.transports
 }
-func (s *ServerOptions) Transports() *types.Set[string] {
+func (s *ServerOptions) Transports() *types.Set {
 	if s.transports == nil {
 		return types.NewSet("polling", "websocket")
 	}

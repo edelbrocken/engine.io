@@ -1,10 +1,10 @@
 package transports
 
 import (
-	"github.com/zishang520/engine.io/events"
-	"github.com/zishang520/engine.io/packet"
-	"github.com/zishang520/engine.io/parser"
-	"github.com/zishang520/engine.io/types"
+	"engine.io/events"
+	"engine.io/packet"
+	"engine.io/parser"
+	"engine.io/types"
 )
 
 type Transport interface {

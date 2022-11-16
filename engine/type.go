@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/zishang520/engine.io/config"
-	"github.com/zishang520/engine.io/events"
-	"github.com/zishang520/engine.io/packet"
-	"github.com/zishang520/engine.io/transports"
-	"github.com/zishang520/engine.io/types"
+	"engine.io/config"
+	"engine.io/events"
+	"engine.io/packet"
+	"engine.io/transports"
+	"engine.io/types"
 )
 
 type Server interface {
@@ -26,7 +26,7 @@ type Server interface {
 	ClientsCount() uint64
 
 	// Returns a list of available transports for upgrade given a certain transport.
-	Upgrades(string) *types.Set[string]
+	Upgrades(string) *types.Set
 
 	// Closes all clients.
 	Close() Server

@@ -4,19 +4,19 @@ import (
 	"sync"
 )
 
-type Set[T comparable] struct {
-	cache map[T]Void
+type Set struct {
+	cache map[string]Void
 	// mu
 	mu sync.RWMutex
 }
 
-func NewSet[T comparable](keys ...T) *Set[T] {
-	s := &Set[T]{cache: map[T]Void{}}
+func NewSet(keys ...string) *Set {
+	s := &Set{cache: map[string]Void{}}
 	s.Add(keys...)
 	return s
 }
 
-func (s *Set[T]) Add(keys ...T) bool {
+func (s *Set) Add(keys ...string) bool {
 	if len(keys) == 0 {
 		return false
 	}
@@ -30,7 +30,7 @@ func (s *Set[T]) Add(keys ...T) bool {
 	return true
 }
 
-func (s *Set[T]) Delete(keys ...T) bool {
+func (s *Set) Delete(keys ...string) bool {
 	if len(keys) == 0 {
 		return false
 	}
@@ -44,15 +44,15 @@ func (s *Set[T]) Delete(keys ...T) bool {
 	return true
 }
 
-func (s *Set[T]) Clear() bool {
+func (s *Set) Clear() bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.cache = map[T]Void{}
+	s.cache = map[string]Void{}
 	return true
 }
 
-func (s *Set[T]) Has(key T) bool {
+func (s *Set) Has(key string) bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -60,18 +60,18 @@ func (s *Set[T]) Has(key T) bool {
 	return exists
 }
 
-func (s *Set[T]) Len() int {
+func (s *Set) Len() int {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
 	return len(s.cache)
 }
 
-func (s *Set[T]) All() map[T]Void {
+func (s *Set) All() map[string]Void {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	_tmp := map[T]Void{}
+	_tmp := map[string]Void{}
 
 	for k := range s.cache {
 		_tmp[k] = NULL
@@ -80,7 +80,7 @@ func (s *Set[T]) All() map[T]Void {
 	return _tmp
 }
 
-func (s *Set[T]) Keys() (list []T) {
+func (s *Set) Keys() (list []string) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 

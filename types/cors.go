@@ -187,7 +187,7 @@ func (c *cors) configureMaxAge() *cors {
 	return c
 }
 
-func parseVary(vary string) *Set[string] {
+func parseVary(vary string) *Set {
 	end := 0
 	start := 0
 	list := NewSet[string]()

@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"strings"
 
+	"engine.io/config"
+	"engine.io/errors"
+	"engine.io/events"
+	"engine.io/log"
+	"engine.io/transports"
+	"engine.io/types"
 	"github.com/gorilla/websocket"
-	"github.com/zishang520/engine.io/config"
-	"github.com/zishang520/engine.io/errors"
-	"github.com/zishang520/engine.io/events"
-	"github.com/zishang520/engine.io/log"
-	"github.com/zishang520/engine.io/transports"
-	"github.com/zishang520/engine.io/types"
 )
 
 var server_log = log.NewLog("engine")
