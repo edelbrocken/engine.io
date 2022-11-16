@@ -28,7 +28,7 @@ var _transports map[string]*transports = map[string]*transports{
 			return NewWebSocket(ctx)
 		},
 		HandlesUpgrades: true,
-		UpgradesTo:      types.NewSet[string](),
+		UpgradesTo:      types.NewSet(),
 	},
 }
 

@@ -45,7 +45,7 @@ type server struct {
 }
 
 // Server New.
-func NewServer(opt any) *server {
+func NewServer(opt interface{}) *server {
 	s := &server{
 		EventEmitter: events.New(),
 	}
@@ -54,7 +54,7 @@ func NewServer(opt any) *server {
 }
 
 // Server New.
-func (s *server) New(opt any) *server {
+func (s *server) New(opt interface{}) *server {
 	opts, _ := opt.(config.ServerOptionsInterface)
 
 	s.clients = &sync.Map{}
@@ -110,25 +110,25 @@ func (s *server) ClientsCount() uint64 {
 // Returns a list of available transports for upgrade given a certain transport.
 func (s *server) Upgrades(transport string) *types.Set {
 	if !s.opts.AllowUpgrades() {
-		return types.NewSet[string]()
+		return types.NewSet()
 	}
 	return transports.Transports()[transport].UpgradesTo
 }
 
 // Verifies a request.
-func (s *server) Verify(ctx *types.HttpContext, upgrade bool) (int, map[string]any) {
+func (s *server) Verify(ctx *types.HttpContext, upgrade bool) (int, map[string]interface{}) {
 	// transport check
 	transport := ctx.Query().Peek("transport")
 	if !s.opts.Transports().Has(transport) {
 		server_log.Debug(`unknown transport "%s"`, transport)
-		return UNKNOWN_TRANSPORT, map[string]any{"transport": transport}
+		return UNKNOWN_TRANSPORT, map[string]interface{}{"transport": transport}
 	}
 
 	// 'Origin' header check
 	if origin := ctx.Headers().Peek("Origin"); utils.CheckInvalidHeaderChar(origin) {
 		ctx.Headers().Remove("Origin")
 		server_log.Debug("origin header invalid")
-		return BAD_REQUEST, map[string]any{"name": "INVALID_ORIGIN", "origin": origin}
+		return BAD_REQUEST, map[string]interface{}{"name": "INVALID_ORIGIN", "origin": origin}
 	}
 
 	// sid check
@@ -137,26 +137,26 @@ func (s *server) Verify(ctx *types.HttpContext, upgrade bool) (int, map[string]a
 		scoket, ok := s.clients.Load(sid)
 		if !ok {
 			server_log.Debug(`unknown sid "%s"`, sid)
-			return UNKNOWN_SID, map[string]any{"sid": sid}
+			return UNKNOWN_SID, map[string]interface{}{"sid": sid}
 		}
 		if previousTransport := scoket.(Socket).Transport().Name(); !upgrade && previousTransport != transport {
 			server_log.Debug("bad request: unexpected transport without upgrade")
-			return BAD_REQUEST, map[string]any{"name": "TRANSPORT_MISMATCH", "transport": transport, "previousTransport": previousTransport}
+			return BAD_REQUEST, map[string]interface{}{"name": "TRANSPORT_MISMATCH", "transport": transport, "previousTransport": previousTransport}
 		}
 	} else {
 		// handshake is GET only
 		if method := ctx.Method(); http.MethodGet != method {
-			return BAD_HANDSHAKE_METHOD, map[string]any{"method": method}
+			return BAD_HANDSHAKE_METHOD, map[string]interface{}{"method": method}
 		}
 
 		if transport == "websocket" && !upgrade {
 			server_log.Debug("invalid transport upgrade")
-			return BAD_REQUEST, map[string]any{"name": "TRANSPORT_HANDSHAKE_ERROR"}
+			return BAD_REQUEST, map[string]interface{}{"name": "TRANSPORT_HANDSHAKE_ERROR"}
 		}
 
 		if allowRequest := s.opts.AllowRequest(); allowRequest != nil {
 			if err := allowRequest(ctx); err != nil {
-				return FORBIDDEN, map[string]any{"message": err.Error()}
+				return FORBIDDEN, map[string]interface{}{"message": err.Error()}
 			}
 		}
 	}
@@ -167,7 +167,7 @@ func (s *server) Verify(ctx *types.HttpContext, upgrade bool) (int, map[string]a
 // Closes all clients.
 func (s *server) Close() Server {
 	server_log.Debug("closing all open clients")
-	s.clients.Range(func(_, client any) bool {
+	s.clients.Range(func(_, client interface{}) bool {
 		client.(Socket).Close(true)
 		return true
 	})
@@ -182,7 +182,7 @@ func (s *server) GenerateId(*types.HttpContext) (string, error) {
 }
 
 // Handshakes a new client.
-func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, map[string]any, transports.Transport) {
+func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, map[string]interface{}, transports.Transport) {
 	protocol := 3 // 3rd revision by default
 	if ctx.Query().Peek("EIO") == "4" {
 		protocol = 4
@@ -196,11 +196,11 @@ func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, m
 				Message: errorMessages[UNSUPPORTED_PROTOCOL_VERSION],
 			},
 			Req: ctx,
-			Context: map[string]any{
+			Context: map[string]interface{}{
 				"protocol": protocol,
 			},
 		})
-		return UNSUPPORTED_PROTOCOL_VERSION, map[string]any{"protocol": protocol}, nil
+		return UNSUPPORTED_PROTOCOL_VERSION, map[string]interface{}{"protocol": protocol}, nil
 	}
 
 	id, err := s.GenerateId(ctx)
@@ -212,12 +212,12 @@ func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, m
 				Message: errorMessages[BAD_REQUEST],
 			},
 			Req: ctx,
-			Context: map[string]any{
+			Context: map[string]interface{}{
 				"name":  "ID_GENERATION_ERROR",
 				"error": err,
 			},
 		})
-		return BAD_REQUEST, map[string]any{"name": "ID_GENERATION_ERROR", "error": err}, nil
+		return BAD_REQUEST, map[string]interface{}{"name": "ID_GENERATION_ERROR", "error": err}, nil
 	}
 
 	server_log.Debug(`handshaking client "%s"`, id)
@@ -231,12 +231,12 @@ func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, m
 				Message: errorMessages[BAD_REQUEST],
 			},
 			Req: ctx,
-			Context: map[string]any{
+			Context: map[string]interface{}{
 				"name":  "TRANSPORT_HANDSHAKE_ERROR",
 				"error": err,
 			},
 		})
-		return BAD_REQUEST, map[string]any{"name": "TRANSPORT_HANDSHAKE_ERROR", "error": err}, nil
+		return BAD_REQUEST, map[string]interface{}{"name": "TRANSPORT_HANDSHAKE_ERROR", "error": err}, nil
 	}
 	if "polling" == transportName {
 		transport.SetMaxHttpBufferSize(s.opts.MaxHttpBufferSize())
@@ -253,7 +253,7 @@ func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, m
 
 	socket := NewSocket(id, s, transport, ctx, protocol)
 
-	transport.On("headers", func(args ...any) {
+	transport.On("headers", func(args ...interface{}) {
 		headers, req := args[0].(*utils.ParameterBag), args[1].(*types.HttpContext)
 		if !ctx.Query().Has("sid") {
 			if cookie := s.opts.Cookie(); cookie != nil {
@@ -269,7 +269,7 @@ func (s *server) Handshake(transportName string, ctx *types.HttpContext) (int, m
 	s.clients.Store(id, socket)
 	atomic.AddUint64(&s.clientsCount, 1)
 
-	socket.Once("close", func(...any) {
+	socket.Once("close", func(...interface{}) {
 		s.clients.Delete(id)
 		atomic.AddUint64(&s.clientsCount, ^uint64(0))
 	})

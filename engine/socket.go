@@ -34,7 +34,7 @@ type socket struct {
 	upgraded              bool
 	writeBuffer           []*packet.Packet
 	packetsFn             []func(transports.Transport)
-	sentCallbackFn        []any
+	sentCallbackFn        []interface{}
 	cleanupFn             []types.Callable
 	checkIntervalTimer    *utils.Timer
 	mucheckIntervalTimer  sync.Mutex
@@ -136,7 +136,7 @@ func (s *socket) New(id string, server Server, transport transports.Transport, c
 
 	s.writeBuffer = []*packet.Packet{}
 	s.packetsFn = []func(transports.Transport){}
-	s.sentCallbackFn = []any{}
+	s.sentCallbackFn = []interface{}{}
 	s.cleanupFn = []types.Callable{}
 	s.request = ctx
 	s.protocol = protocol
@@ -166,7 +166,7 @@ func (s *socket) onOpen() {
 	// sends an `open` packet
 	s.Transport().SetSid(s.id)
 
-	data, err := json.Marshal(map[string]any{
+	data, err := json.Marshal(map[string]interface{}{
 		"sid":          s.id,
 		"upgrades":     s.getAvailableUpgrades(),
 		"pingInterval": int64(s.server.Opts().PingInterval() / time.Millisecond),
@@ -248,7 +248,7 @@ func (s *socket) onPacket(data *packet.Packet) {
 }
 
 // Called upon transport error.
-func (s *socket) onError(err any) {
+func (s *socket) onError(err interface{}) {
 	socket_log.Debug("transport error %v", err)
 	s.OnClose("transport error", err)
 }
@@ -282,17 +282,17 @@ func (s *socket) resetPingTimeout(timeout time.Duration) {
 
 // Attaches handlers for the given transport.
 func (s *socket) setTransport(transport transports.Transport) {
-	onError := func(err ...any) {
+	onError := func(err ...interface{}) {
 		err = append(err, nil)
 		s.onError(err[0])
 	}
-	onPacket := func(packets ...any) {
+	onPacket := func(packets ...interface{}) {
 		if len(packets) > 0 {
 			s.onPacket(packets[0].(*packet.Packet))
 		}
 	}
-	flush := func(...any) { s.flush() }
-	onClose := func(...any) { s.OnClose("transport close") }
+	flush := func(...interface{}) { s.flush() }
+	onClose := func(...interface{}) { s.OnClose("transport close") }
 
 	s.mutransport.Lock()
 	s.transport = transport
@@ -329,7 +329,7 @@ func (s *socket) MaybeUpgrade(transport transports.Transport) {
 	var check, cleanup func()
 	var onPacket, onError, onTransportClose, onClose events.Listener
 
-	onPacket = func(datas ...any) {
+	onPacket = func(datas ...interface{}) {
 		data := datas[0].(*packet.Packet)
 		sb := new(strings.Builder)
 		io.Copy(sb, data.Data)
@@ -398,7 +398,7 @@ func (s *socket) MaybeUpgrade(transport transports.Transport) {
 		s.RemoveListener("close", onClose)
 	}
 
-	onError = func(err ...any) {
+	onError = func(err ...interface{}) {
 		socket_log.Debug("client did not complete upgrade - %v", err[0])
 		if transport != nil {
 			cleanup()
@@ -407,11 +407,11 @@ func (s *socket) MaybeUpgrade(transport transports.Transport) {
 		}
 	}
 
-	onTransportClose = func(...any) {
+	onTransportClose = func(...interface{}) {
 		onError("transport closed")
 	}
 
-	onClose = func(...any) {
+	onClose = func(...interface{}) {
 		onError("socket closed")
 	}
 
@@ -445,7 +445,7 @@ func (s *socket) clearTransport() {
 	s.mucleanupFn.RUnlock()
 
 	// silence further transport errors and prevent uncaught exceptions
-	s.Transport().On("error", func(...any) {
+	s.Transport().On("error", func(...interface{}) {
 		socket_log.Debug("error triggered by discarded transport")
 	})
 
@@ -460,7 +460,7 @@ func (s *socket) clearTransport() {
 // Called upon transport considered closed.
 // Possible reasons: `ping timeout`, `client error`, `parse error`,
 // `transport error`, `server close`, `transport close`
-func (s *socket) OnClose(reason string, description ...any) {
+func (s *socket) OnClose(reason string, description ...interface{}) {
 	description = append(description, nil)
 	if "closed" != s.ReadyState() {
 		s.SetReadyState("closed")
@@ -507,7 +507,7 @@ func (s *socket) OnClose(reason string, description ...any) {
 // Setup and manage send callback
 func (s *socket) setupSendCallback() {
 	// the message was sent successfully, execute the callback
-	onDrain := func(...any) {
+	onDrain := func(...interface{}) {
 		s.musentCallbackFn.Lock()
 		defer s.musentCallbackFn.Unlock()
 
@@ -643,7 +643,7 @@ func (s *socket) Close(discard bool) {
 	s.muwriteBuffer.RUnlock()
 
 	if writeBufferLength > 0 {
-		s.Once("drain", func(...any) {
+		s.Once("drain", func(...interface{}) {
 			s.closeTransport(discard)
 		})
 		return

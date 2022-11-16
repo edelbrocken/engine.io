@@ -28,7 +28,7 @@ func (s *server) CreateTransport(transportName string, ctx *types.HttpContext) (
 func (s *server) HandleRequest(ctx *types.HttpContext) {
 	server_log.Debug(`handling "%s" http request "%s"`, ctx.Method(), ctx.Request().RequestURI)
 
-	callback := func(errorCode int, errorContext map[string]any) {
+	callback := func(errorCode int, errorContext map[string]interface{}) {
 		if errorContext != nil {
 			s.Emit("connection_error", &types.ErrorMessage{
 				CodeMessage: &types.CodeMessage{
@@ -47,7 +47,7 @@ func (s *server) HandleRequest(ctx *types.HttpContext) {
 			if socket, ok := s.clients.Load(sid); ok {
 				socket.(Socket).Transport().OnRequest(ctx)
 			} else {
-				abortRequest(ctx, UNKNOWN_SID, map[string]any{"sid": sid})
+				abortRequest(ctx, UNKNOWN_SID, map[string]interface{}{"sid": sid})
 			}
 		} else {
 			if errorCode, errorContext, t := s.Handshake(ctx.Query().Peek("transport"), ctx); t == nil {
@@ -118,7 +118,7 @@ func (s *server) HandleUpgrade(ctx *types.HttpContext) {
 
 // Called upon a ws.io connection.
 func (s *server) onWebSocket(ctx *types.HttpContext, wsc *types.WebSocketConn) {
-	onUpgradeError := func(...any) {
+	onUpgradeError := func(...interface{}) {
 		server_log.Debug("websocket error before upgrade")
 		// wsc.close() not needed
 	}
@@ -178,7 +178,7 @@ func (s *server) onWebSocket(ctx *types.HttpContext, wsc *types.WebSocketConn) {
 }
 
 // Captures upgrade requests for a types.HttpServer.
-func (s *server) Attach(server *types.HttpServer, opts any) {
+func (s *server) Attach(server *types.HttpServer, opts interface{}) {
 	options, _ := opts.(config.AttachOptionsInterface)
 	path := "/engine.io"
 
@@ -188,7 +188,7 @@ func (s *server) Attach(server *types.HttpServer, opts any) {
 		}
 	}
 
-	server.On("close", func(...any) {
+	server.On("close", func(...interface{}) {
 		s.Close()
 	})
 
@@ -217,7 +217,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Close the HTTP long-polling request
-func abortRequest(ctx *types.HttpContext, errorCode int, errorContext map[string]any) {
+func abortRequest(ctx *types.HttpContext, errorCode int, errorContext map[string]interface{}) {
 	server_log.Debug("abortRequest %d", errorCode)
 	statusCode := http.StatusBadRequest
 	if errorCode == FORBIDDEN {
@@ -237,7 +237,7 @@ func abortRequest(ctx *types.HttpContext, errorCode int, errorContext map[string
 }
 
 // Close the WebSocket connection
-func abortUpgrade(ctx *types.HttpContext, errorCode int, errorContext map[string]any) {
+func abortUpgrade(ctx *types.HttpContext, errorCode int, errorContext map[string]interface{}) {
 	server_log.Debug("abortUpgrade %d", errorCode)
 	message := errorMessages[errorCode]
 	if m, ok := errorContext["message"]; ok {

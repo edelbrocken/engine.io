@@ -8,15 +8,15 @@ import (
 )
 
 type Cors struct {
-	Origin               any    `json:"origin,omitempty"`
-	Methods              any    `json:"methods,omitempty"`
-	AllowedHeaders       any    `json:"allowedHeaders,omitempty"`
-	Headers              any    `json:"headers,omitempty"`
-	ExposedHeaders       any    `json:"exposedHeaders,omitempty"`
-	MaxAge               string `json:"maxAge,omitempty"`
-	Credentials          bool   `json:"credentials,omitempty"`
-	PreflightContinue    bool   `json:"preflightContinue,omitempty"`
-	OptionsSuccessStatus int    `json:"optionsSuccessStatus,omitempty"`
+	Origin               interface{} `json:"origin,omitempty"`
+	Methods              interface{} `json:"methods,omitempty"`
+	AllowedHeaders       interface{} `json:"allowedHeaders,omitempty"`
+	Headers              interface{} `json:"headers,omitempty"`
+	ExposedHeaders       interface{} `json:"exposedHeaders,omitempty"`
+	MaxAge               string      `json:"maxAge,omitempty"`
+	Credentials          bool        `json:"credentials,omitempty"`
+	PreflightContinue    bool        `json:"preflightContinue,omitempty"`
+	OptionsSuccessStatus int         `json:"optionsSuccessStatus,omitempty"`
 }
 
 type cors struct {
@@ -27,9 +27,9 @@ type cors struct {
 	mu      sync.RWMutex
 }
 
-func (c *cors) isOriginAllowed(origin string, allowedOrigin any) bool {
+func (c *cors) isOriginAllowed(origin string, allowedOrigin interface{}) bool {
 	switch v := allowedOrigin.(type) {
-	case []any:
+	case []interface{}:
 		for _, value := range v {
 			if c.isOriginAllowed(origin, value) {
 				return true
@@ -190,7 +190,7 @@ func (c *cors) configureMaxAge() *cors {
 func parseVary(vary string) *Set {
 	end := 0
 	start := 0
-	list := NewSet[string]()
+	list := NewSet()
 
 	// gather tokens
 	for i, l := 0, len(vary); i < l; i++ {

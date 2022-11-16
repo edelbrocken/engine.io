@@ -24,7 +24,7 @@ type (
 	// EventName is just a type of string, it's the event name
 	EventName string
 	// Listener is the type of a Listener, it's a func which receives any,optional, arguments from the caller/emmiter
-	Listener func(...any)
+	Listener func(...interface{})
 	// Events the type for registered listeners, it's just a map[string][]func(...any)
 	Events map[EventName][]Listener
 
@@ -43,7 +43,7 @@ type (
 		// Synchronously calls each of the listeners registered for the event named
 		// eventName, in the order they were registered,
 		// passing the supplied arguments to each.
-		Emit(EventName, ...any)
+		Emit(EventName, ...interface{})
 		// EventNames returns an array listing the events for which the emitter has registered listeners.
 		// The values in the array will be strings.
 		EventNames() []EventName
@@ -138,7 +138,7 @@ func (e *emmiter) AddListener(evt EventName, listeners ...Listener) error {
 	return e.addlistener(evt, events...)
 }
 
-func (e *emmiter) Emit(evt EventName, data ...any) {
+func (e *emmiter) Emit(evt EventName, data ...interface{}) {
 	e.mu.RLock()
 	if e.evtListeners == nil {
 		defer e.mu.RUnlock() // RUnlock
@@ -219,7 +219,7 @@ type oneTimelistener struct {
 	executeRef Listener
 }
 
-func (l *oneTimelistener) execute(vals ...any) {
+func (l *oneTimelistener) execute(vals ...interface{}) {
 	if atomic.CompareAndSwapInt32(&l.fired, 0, 1) {
 		defer l.emitter.RemoveListener(l.evt, l.listener)
 		l.listener(vals)

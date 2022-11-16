@@ -87,7 +87,7 @@ func (p *polling) onPollRequest(ctx *types.HttpContext) {
 
 	polling_log.Debug("setting request")
 
-	onClose := events.Listener(func(...any) {
+	onClose := events.Listener(func(...interface{}) {
 		p.OnError("poll connection closed prematurely", nil)
 	})
 
@@ -153,7 +153,7 @@ func (p *polling) onDataRequest(ctx *types.HttpContext) {
 		p.mu_dataCtx.Unlock()
 	}
 
-	onClose = func(...any) {
+	onClose = func(...interface{}) {
 		cleanup()
 		p.OnError("data request connection closed prematurely", nil)
 	}

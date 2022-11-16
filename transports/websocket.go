@@ -46,10 +46,10 @@ func (w *websocket) New(ctx *types.HttpContext) *websocket {
 
 	go w._init()
 
-	w.socket.On("error", func(errors ...any) {
+	w.socket.On("error", func(errors ...interface{}) {
 		w.OnError("websocket error", errors[0].(error))
 	})
-	w.socket.On("close", func(...any) {
+	w.socket.On("close", func(...interface{}) {
 		w.OnClose()
 	})
 

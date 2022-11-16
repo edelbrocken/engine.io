@@ -10,19 +10,19 @@ var _event = New()
 
 var testEvents = Events{
 	"user_created": []Listener{
-		func(payload ...any) {
+		func(payload ...interface{}) {
 			fmt.Printf("A new User just created!\n")
 		},
-		func(payload ...any) {
+		func(payload ...interface{}) {
 			fmt.Printf("A new User just created, *from second event listener\n")
 		},
 	},
-	"user_joined": []Listener{func(payload ...any) {
+	"user_joined": []Listener{func(payload ...interface{}) {
 		user := payload[0].(string)
 		room := payload[1].(string)
 		fmt.Printf("%s joined to room: %s\n", user, room)
 	}},
-	"user_left": []Listener{func(payload ...any) {
+	"user_left": []Listener{func(payload ...interface{}) {
 		user := payload[0].(string)
 		room := payload[1].(string)
 		fmt.Printf("%s left from the room: %s\n", user, room)
@@ -65,7 +65,7 @@ func TestEvents(t *testing.T) {
 	e := New()
 	expectedPayload := "this is my payload"
 
-	e.On("my_event", func(payload ...any) {
+	e.On("my_event", func(payload ...interface{}) {
 		if len(payload) <= 0 {
 			t.Fatal("Expected payload but got nothing")
 		}
@@ -101,7 +101,7 @@ func TestEventsOnce(t *testing.T) {
 	_event.Clear()
 
 	var count = 0
-	_event.Once("my_event", func(payload ...any) {
+	_event.Once("my_event", func(payload ...interface{}) {
 		if count > 0 {
 			t.Fatalf("Once's listener fired more than one time! count: %d", count)
 		}
@@ -136,7 +136,7 @@ func TestRemoveListener(t *testing.T) {
 	e := New()
 
 	var count = 0
-	listener := func(payload ...any) {
+	listener := func(payload ...interface{}) {
 		if count > 1 {
 			t.Fatal("Event listener should be removed")
 		}
@@ -144,12 +144,12 @@ func TestRemoveListener(t *testing.T) {
 		count++
 	}
 
-	once := func(payload ...any) {}
+	once := func(payload ...interface{}) {}
 
 	e.Once("once_event", once)
 	e.AddListener("my_event", listener)
-	e.AddListener("my_event", func(payload ...any) {})
-	e.AddListener("another_event", func(payload ...any) {})
+	e.AddListener("my_event", func(payload ...interface{}) {})
+	e.AddListener("another_event", func(payload ...interface{}) {})
 
 	e.Emit("my_event")
 
