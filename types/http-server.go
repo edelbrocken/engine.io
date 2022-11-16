@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/edelbrocken/engine.io/events"
+	"github.com/zishang520/engine.io/events"
 )
 
 type HttpServer struct {

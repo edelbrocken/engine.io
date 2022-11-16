@@ -8,10 +8,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/edelbrocken/engine.io/errors"
-	"github.com/edelbrocken/engine.io/packet"
-	"github.com/edelbrocken/engine.io/types"
-	"github.com/edelbrocken/engine.io/utils"
+	"github.com/zishang520/engine.io/errors"
+	"github.com/zishang520/engine.io/packet"
+	"github.com/zishang520/engine.io/types"
+	"github.com/zishang520/engine.io/utils"
 )
 
 type parserv3 struct{}

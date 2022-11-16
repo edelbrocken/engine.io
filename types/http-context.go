@@ -8,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/edelbrocken/engine.io/errors"
-	"github.com/edelbrocken/engine.io/events"
-	"github.com/edelbrocken/engine.io/utils"
+	"github.com/zishang520/engine.io/errors"
+	"github.com/zishang520/engine.io/events"
+	"github.com/zishang520/engine.io/utils"
 )
 
 type HttpContext struct {
