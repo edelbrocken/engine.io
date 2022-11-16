@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 type AllowRequest func(*types.HttpContext) error

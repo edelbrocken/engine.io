@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"engine.io/utils"
+	"github.com/edelbrocken/engine.io/utils"
 )
 
 type ServeMux struct {

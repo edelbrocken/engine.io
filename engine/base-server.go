@@ -5,11 +5,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"engine.io/config"
-	"engine.io/events"
-	"engine.io/transports"
-	"engine.io/types"
-	"engine.io/utils"
+	"github.com/edelbrocken/engine.io/config"
+	"github.com/edelbrocken/engine.io/events"
+	"github.com/edelbrocken/engine.io/transports"
+	"github.com/edelbrocken/engine.io/types"
+	"github.com/edelbrocken/engine.io/utils"
 )
 
 // Protocol errors mappings.

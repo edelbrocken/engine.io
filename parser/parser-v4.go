@@ -8,9 +8,9 @@ import (
 	"io"
 	"strings"
 
-	"engine.io/errors"
-	"engine.io/packet"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/errors"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 type parserv4 struct{}

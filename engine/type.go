@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"sync"
 
-	"engine.io/config"
-	"engine.io/events"
-	"engine.io/packet"
-	"engine.io/transports"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/config"
+	"github.com/edelbrocken/engine.io/events"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/transports"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 type Server interface {

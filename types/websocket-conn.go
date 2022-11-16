@@ -1,7 +1,7 @@
 package types
 
 import (
-	"engine.io/events"
+	"github.com/edelbrocken/engine.io/events"
 	"github.com/gorilla/websocket"
 )
 

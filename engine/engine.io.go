@@ -3,7 +3,7 @@ package engine
 import (
 	"net/http"
 
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 const Protocol = 4

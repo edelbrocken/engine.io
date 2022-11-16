@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"strings"
 
-	"engine.io/config"
-	"engine.io/errors"
-	"engine.io/events"
-	"engine.io/log"
-	"engine.io/transports"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/config"
+	"github.com/edelbrocken/engine.io/errors"
+	"github.com/edelbrocken/engine.io/events"
+	"github.com/edelbrocken/engine.io/log"
+	"github.com/edelbrocken/engine.io/transports"
+	"github.com/edelbrocken/engine.io/types"
 	"github.com/gorilla/websocket"
 )
 

@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"engine.io/packet"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 type Parser interface {
