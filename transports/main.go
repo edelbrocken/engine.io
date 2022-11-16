@@ -1,8 +1,6 @@
 package transports
 
-import (
-	"engine.io/types"
-)
+import "github.com/edelbrocken/engine.io/types"
 
 type transports struct {
 	New             func(*types.HttpContext) Transport

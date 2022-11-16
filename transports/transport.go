@@ -4,12 +4,12 @@ import (
 	"sync"
 	"time"
 
-	"engine.io/errors"
-	"engine.io/events"
-	"engine.io/log"
-	"engine.io/packet"
-	"engine.io/parser"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/errors"
+	"github.com/edelbrocken/engine.io/events"
+	"github.com/edelbrocken/engine.io/log"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/parser"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 var transport_log = log.NewLog("engine:transport")

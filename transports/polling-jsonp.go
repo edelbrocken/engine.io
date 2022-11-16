@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"regexp"
 
-	"engine.io/log"
-	"engine.io/packet"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/log"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 var jsonp_log = log.NewLog("engine:jsonp")

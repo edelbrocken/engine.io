@@ -3,9 +3,9 @@ package transports
 import (
 	"io"
 
-	"engine.io/log"
-	"engine.io/packet"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/log"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
 	ws "github.com/gorilla/websocket"
 )
 

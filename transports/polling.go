@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
-	"engine.io/events"
-	"engine.io/log"
-	"engine.io/packet"
-	"engine.io/types"
-	"engine.io/utils"
 	"github.com/andybalholm/brotli"
+	"github.com/edelbrocken/engine.io/events"
+	"github.com/edelbrocken/engine.io/log"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
+	"github.com/edelbrocken/engine.io/utils"
 )
 
 var polling_log = log.NewLog("engine:polling")

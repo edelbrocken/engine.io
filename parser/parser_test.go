@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"engine.io/packet"
-	"engine.io/types"
+	"github.com/edelbrocken/engine.io/packet"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 func TestParserv3(t *testing.T) {
