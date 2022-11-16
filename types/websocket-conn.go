@@ -1,8 +1,8 @@
 package types
 
 import (
+	"github.com/edelbrocken/engine.io/events"
 	"github.com/gorilla/websocket"
-	"github.com/zishang520/engine.io/events"
 )
 
 type WebSocketConn struct {

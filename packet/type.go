@@ -3,7 +3,7 @@ package packet
 import (
 	"io"
 
-	"github.com/zishang520/engine.io/types"
+	"github.com/edelbrocken/engine.io/types"
 )
 
 type Type string
